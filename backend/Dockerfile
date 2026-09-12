@@ -11,9 +11,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Hugging Face Spaces runs as user with UID 1000
-RUN useradd -m -u 1000 user
-
 WORKDIR /app
 
 # Install Python dependencies: CPU-only torch first to save download time and disk space
@@ -28,18 +25,16 @@ RUN npm install --omit=dev
 # Copy application code
 COPY . .
 
-# Ensure upload, jobdesc, and output directories exist with proper permissions
+# Ensure upload, jobdesc, and output directories exist with proper permissions for the built-in node user
 RUN mkdir -p uploads jobdesc output \
-    && chown -R user:user /app
+    && chown -R node:node /app
 
-# Switch to non-root user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH \
-    PORT=7860 \
+# Switch to the existing node user (UID 1000)
+USER node
+
+ENV HOME=/home/node \
+    PATH=/home/node/.local/bin:$PATH \
     PYTHON_BIN=python3 \
     NODE_ENV=production
-
-EXPOSE 7860
 
 CMD ["node", "server.js"]
