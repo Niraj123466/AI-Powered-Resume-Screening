@@ -15,7 +15,8 @@ WORKDIR /app
 
 # Install Python dependencies: CPU-only torch first to save download time and disk space
 COPY requirements.txt ./
-RUN pip3 install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu --break-system-packages \
+RUN pip3 install --no-cache-dir --upgrade pip --break-system-packages \
+    && pip3 install --no-cache-dir torch --extra-index-url https://download.pytorch.org/whl/cpu --break-system-packages \
     && pip3 install --no-cache-dir -r requirements.txt --break-system-packages
 
 # Install Node dependencies
