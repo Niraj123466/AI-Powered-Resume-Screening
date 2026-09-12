@@ -1,38 +1,121 @@
-import { Github } from 'lucide-react';
+import { Zap, Github, Twitter } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="footer bg-base-100 text-neutral-content items-center p-4">
-      <aside className="grid-flow-col items-center">
-        <p>Copyright © {new Date().getFullYear()} - All rights reserved</p>
-      </aside>
-      <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-        <a href="#" aria-label="GitHub">
-          <Github color="white" size={30} />
-        </a>
-        <a href="#" aria-label="YouTube">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            className="fill-current"
+    <footer
+      style={{
+        backgroundColor: "var(--color-surface)",
+        borderTop: "1px solid var(--color-border)",
+        marginTop: "auto",
+      }}
+    >
+      <div
+        className="page-container"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "16px",
+          paddingTop: "20px",
+          paddingBottom: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div
+            style={{
+              width: "22px",
+              height: "22px",
+              borderRadius: "var(--radius-sm)",
+              backgroundColor: "var(--color-brand)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
           >
-            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-          </svg>
-        </a>
-        <a href="#" aria-label="Facebook">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            className="fill-current"
+            <Zap size={12} color="white" fill="white" />
+          </div>
+          <span
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color: "var(--color-text-secondary)",
+              fontFamily: "var(--font-sans)",
+            }}
           >
-            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-          </svg>
-        </a>
-      </nav>
+            Resume<span style={{ color: "var(--color-brand)" }}>Ranker</span>
+          </span>
+          <span
+            style={{
+              fontSize: "0.8125rem",
+              color: "var(--color-text-muted)",
+              marginLeft: "8px",
+            }}
+          >
+            © {new Date().getFullYear()} All rights reserved
+          </span>
+        </div>
+
+        {/* Links + Socials */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <nav style={{ display: "flex", gap: "16px" }}>
+            {[
+              { to: "/", label: "Home" },
+              { to: "/about", label: "About" },
+              { to: "/upload", label: "Analyzer" },
+            ].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "var(--color-text-muted)",
+                  textDecoration: "none",
+                  transition: "color 0.15s ease",
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = "var(--color-text-secondary)"}
+                onMouseLeave={e => e.currentTarget.style.color = "var(--color-text-muted)"}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          <div style={{ display: "flex", gap: "12px" }}>
+            <a
+              href="#"
+              aria-label="GitHub"
+              style={{
+                color: "var(--color-text-muted)",
+                transition: "color 0.15s ease",
+                display: "flex",
+                alignItems: "center",
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--color-text-secondary)"}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--color-text-muted)"}
+            >
+              <Github size={17} />
+            </a>
+            <a
+              href="#"
+              aria-label="Twitter / X"
+              style={{
+                color: "var(--color-text-muted)",
+                transition: "color 0.15s ease",
+                display: "flex",
+                alignItems: "center",
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--color-text-secondary)"}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--color-text-muted)"}
+            >
+              <Twitter size={17} />
+            </a>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }

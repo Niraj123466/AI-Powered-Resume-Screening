@@ -155,21 +155,21 @@ def calculate_coding_score(github_data, leetcode_data, codechef_data):
         "fully_solved": 500
     }
 
-    if "total_contributions" in github_data:
+    if github_data.get("total_contributions") is not None:
         score += min(github_data["total_contributions"], max_vals["total_contributions"]) / max_vals["total_contributions"] * 0.10
-    if "active_days" in github_data:
+    if github_data.get("active_days") is not None:
         score += min(github_data["active_days"], max_vals["active_days"]) / max_vals["active_days"] * 0.05
-    if "public_repos" in github_data:
+    if github_data.get("public_repos") is not None:
         score += min(github_data["public_repos"], max_vals["public_repos"]) / max_vals["public_repos"] * 0.05
 
-    if "total_problems_solved" in leetcode_data:
+    if leetcode_data.get("total_problems_solved") is not None:
         score += min(leetcode_data["total_problems_solved"], max_vals["total_problems_solved"]) / max_vals["total_problems_solved"] * 0.15
-    if "ranking" in leetcode_data and isinstance(leetcode_data["ranking"], int):
+    if leetcode_data.get("ranking") is not None and isinstance(leetcode_data["ranking"], int):
         score += (1 - min(leetcode_data["ranking"], max_vals["ranking"]) / max_vals["ranking"]) * 0.10
 
-    if "rating" in codechef_data:
+    if codechef_data.get("rating") is not None:
         score += min(codechef_data["rating"], max_vals["rating"]) / max_vals["rating"] * 0.10
-    if "fully_solved" in codechef_data:
+    if codechef_data.get("fully_solved") is not None:
         score += min(codechef_data["fully_solved"], max_vals["fully_solved"]) / max_vals["fully_solved"] * 0.10
 
     if github_data.get("url") and leetcode_data.get("url") and codechef_data.get("url"):
@@ -209,38 +209,80 @@ def analyze_resumes_with_job_description(resume_folder: str, job_description: st
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
-    resume_folder = "./uploads"
-    job_desc_folder = "./jobdesc"
+    try:
+        resume_folder = "./uploads"
+        job_desc_folder = "./jobdesc"
 
-    job_description = get_job_description_from_pdf(job_desc_folder)
-    if not job_description:
-        print("Job description not found. Exiting.")
-        exit()
+        # Check if folders exist
+        if not os.path.exists(resume_folder):
+            print(f"Error: Resume folder '{resume_folder}' does not exist.")
+            exit(1)
+        
+        if not os.path.exists(job_desc_folder):
+            print(f"Error: Job description folder '{job_desc_folder}' does not exist.")
+            exit(1)
+            
+        # Check if there are PDF files in the resume folder
+        resume_files = [f for f in os.listdir(resume_folder) if f.lower().endswith('.pdf')]
+        if not resume_files:
+            print(f"Error: No PDF files found in '{resume_folder}'.")
+            exit(1)
+            
+        job_description = get_job_description_from_pdf(job_desc_folder)
+        if not job_description:
+            print("Error: Job description not found or could not be extracted. Exiting.")
+            exit(1)
 
-    top_resumes = analyze_resumes_with_job_description(resume_folder, job_description)
+        top_resumes = analyze_resumes_with_job_description(resume_folder, job_description)
+    except Exception as e:
+        print(f"Error in main execution: {str(e)}")
+        exit(1)
 
-output_data = []
+try:
+    output_data = []
 
-for idx, (name, score, text) in enumerate(top_resumes, 1):
-    file_path = os.path.join(resume_folder, name)
-    links = extract_links_with_annotations(file_path, text)
+    for idx, (name, score, text) in enumerate(top_resumes, 1):
+        file_path = os.path.join(resume_folder, name)
+        links = extract_links_with_annotations(file_path, text)
 
-    stats_github = get_github_stats(links["github"]) if links["github"] else {}
-    stats_leetcode = get_leetcode_stats(links["leetcode"]) if links["leetcode"] else {}
-    stats_codechef = get_codechef_stats(links["codechef"]) if links["codechef"] else {}
+        stats_github = {}
+        stats_leetcode = {}
+        stats_codechef = {}
+        
+        try:
+            if links["github"]:
+                stats_github = get_github_stats(links["github"])
+        except Exception as e:
+            print(f"Error getting GitHub stats: {str(e)}")
+            
+        try:
+            if links["leetcode"]:
+                stats_leetcode = get_leetcode_stats(links["leetcode"])
+        except Exception as e:
+            print(f"Error getting LeetCode stats: {str(e)}")
+            
+        try:
+            if links["codechef"]:
+                stats_codechef = get_codechef_stats(links["codechef"])
+        except Exception as e:
+            print(f"Error getting CodeChef stats: {str(e)}")
 
-    coding_score = calculate_coding_score(stats_github, stats_leetcode, stats_codechef)
+        coding_score = calculate_coding_score(stats_github, stats_leetcode, stats_codechef)
 
-    output_data.append({
-        "name": name,
-        "compatibility_score": score,
-        "coding_profiles": links,
-        "github_stats": stats_github,
-        "leetcode_stats": stats_leetcode,
-        "codechef_stats": stats_codechef,
-        "coding_score": coding_score
-    })
+        output_data.append({
+            "name": name,
+            "compatibility_score": score,
+            "coding_profiles": links,
+            "github_stats": stats_github,
+            "leetcode_stats": stats_leetcode,
+            "codechef_stats": stats_codechef,
+            "coding_score": coding_score
+        })
 
-os.makedirs("output", exist_ok=True)
-with open("output/resume_analysis_output.json", "w") as f:
-    json.dump(output_data, f, indent=4)
+    os.makedirs("output", exist_ok=True)
+    with open("output/resume_analysis_output.json", "w") as f:
+        json.dump(output_data, f, indent=4)
+    print("Analysis completed successfully. Results saved to output/resume_analysis_output.json")
+except Exception as e:
+    print(f"Error processing resume data: {str(e)}")
+    exit(1)

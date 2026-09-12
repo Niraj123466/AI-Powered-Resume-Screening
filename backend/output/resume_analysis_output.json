@@ -1,7 +1,43 @@
 [
     {
-        "name": "NirajMore (2).pdf",
-        "compatibility_score": 0.2934091091156006,
+        "name": "Jimil_Soni_Resume.pdf",
+        "compatibility_score": 0.41667836904525757,
+        "coding_profiles": {
+            "github": "https://github.com/jimil222/Ingreasy.git",
+            "leetcode": null,
+            "codechef": null
+        },
+        "github_stats": {
+            "url": "https://github.com/jimil222/Ingreasy.git",
+            "total_contributions": 3,
+            "active_days": 0,
+            "public_repos": null
+        },
+        "leetcode_stats": {},
+        "codechef_stats": {},
+        "coding_score": 0.001
+    },
+    {
+        "name": "nupur_resume.pdf",
+        "compatibility_score": 0.30450180172920227,
+        "coding_profiles": {
+            "github": "https://github.com/nupurmestry15",
+            "leetcode": null,
+            "codechef": null
+        },
+        "github_stats": {
+            "url": "https://github.com/nupurmestry15",
+            "total_contributions": 0,
+            "active_days": 0,
+            "public_repos": 7
+        },
+        "leetcode_stats": {},
+        "codechef_stats": {},
+        "coding_score": 0.007
+    },
+    {
+        "name": "NirajMore.pdf",
+        "compatibility_score": 0.21112701296806335,
         "coding_profiles": {
             "github": "https://github.com/Niraj123466",
             "leetcode": "https://leetcode.com/u/Niraj123466/",
@@ -9,19 +45,17 @@
         },
         "github_stats": {
             "url": "https://github.com/Niraj123466",
-            "total_contributions": 29,
-            "active_days": 6,
-            "public_repos": 55
+            "total_contributions": 9,
+            "active_days": 7,
+            "public_repos": 68
         },
         "leetcode_stats": {
             "url": "https://leetcode.com/u/Niraj123466/",
-            "total_problems_solved": 225,
-            "ranking": 582162,
-            "contest_rating": null
+            "error": "LeetCode profile not found or unavailable."
         },
         "codechef_stats": {
             "url": "https://www.codechef.com/users/moreniraj49"
         },
-        "coding_score": 0.15
+        "coding_score": 0.104
     }
 ]

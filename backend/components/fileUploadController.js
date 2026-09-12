@@ -51,8 +51,17 @@ router.post("/run-script", (req, res) => {
     const { filePaths } = req.body;
     if (!filePaths?.length) return res.status(400).json({ message: "No files to process" });
 
-    exec("python next.py", (error, stdout) => {
-        if (error) return res.status(500).json({ message: "Failed to run script", error });
+    const scriptPath = path.join(__dirname, "../next.py");
+    const cwd = path.join(__dirname, "../");
+    const pythonBin = process.env.PYTHON_BIN || 'python3';
+
+    exec(`${pythonBin} "${scriptPath}"`, { cwd }, (error, stdout, stderr) => {
+        if (error) {
+            console.error("Python script error:", error);
+            console.error("stderr:", stderr);
+            console.error("stdout:", stdout);
+            return res.status(500).json({ message: "Failed to run script", error: stderr || error.message });
+        }
 
         clearDirectories()
             .then(() => res.json({ message: "Script executed successfully", output: stdout }))

@@ -8,9 +8,20 @@ require("dotenv").config();
 const fileUploadController = require("./components/fileUploadController");
 
 const app = express();
-const PORT = process.env.PORT || 5001
+const PORT = process.env.PORT || 7860;
+
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+const corsOptions = {
+  origin: process.env.FRONTEND_URL ? allowedOrigins : true,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Razorpay instance

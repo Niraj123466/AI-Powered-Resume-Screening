@@ -1,0 +1,10 @@
+PyMuPDF
+pytesseract
+pdfplumber
+python-docx
+requests
+beautifulsoup4
+sentence-transformers
+pandas
+numpy
+scikit-learn
